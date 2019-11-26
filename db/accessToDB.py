@@ -19,21 +19,22 @@ class accesSql:
     def cleanTerminal():
         time.sleep(5)
         os.system ("clear")
-    
-    
+
     def insertUsers(self, email, name, password):
         try:
             connection = mysql.connector.connect(host = self.host, user = self.user, passwd = self.__passwd, db = self.db)
-            mySql_insert_query = """INSERT INTO users VALUES("{}", "{}","{}");""".format(email, name, password)
+            mySql_insert_query = """INSERT INTO users VALUES("{}", "{}","{}", false);""".format(email, name, password)
             cursor = connection.cursor()
             result = cursor.execute(mySql_insert_query)
             connection.commit()
             print("Inserted data")
             cursor.close()
+            return True
 
         except mysql.connector.Error as error:
             print("error, data no inserted")
             print(error)
+            return False
 
         finally:
             if(connection.is_connected()):
@@ -174,6 +175,50 @@ class accesSql:
             return data
         except Error as e:
             print("Error reading data from table")
+        finally:
+            if(connection.is_connected):
+                connection.close()
+                print("close connection")
+                accesSql.cleanTerminal()
+    def selectUsersad(self, email):
+       # """"Puede hacer un select general a todas las tablas""""
+        try:
+            connection = mysql.connector.connect(host=self.host, user=self.user, passwd=self.__passwd, db=self.db)
+            sql_query = "SELECT * FROM users WHERE email = '{}';".format(email)
+            cursor = connection.cursor()
+            cursor.execute(sql_query)
+            data = cursor.fetchall()
+            return data
+        except Error as e:
+            print("Error reading data from table {}".format(e))
+
+    def selecAc(self):
+       # """"Puede hacer un select general a todas las tablas""""
+        try:
+            connection = mysql.connector.connect(host=self.host, user=self.user, passwd=self.__passwd, db=self.db)
+            sql_query = "SELECT * FROM ac;"
+            cursor = connection.cursor()
+            cursor.execute(sql_query)
+            data = cursor.fetchall()
+            return data
+        except Error as e:
+            print("Error reading data from table {}".format(e))
+    def deleteac(self, id_ac):
+        try:
+            connection = mysql.connector.connect(host=self.host, user=self.user, passwd=self.__passwd, db=self.db)
+            cursor = connection.cursor()
+            sql_query = "DELETE FROM ac WHERE id_ac = '{}';".format(id_ac)
+            cursor.execute(sql_query)
+            connection.commit()
+            sql_query = "SELECT * FROM ac;"
+            cursor.execute(sql_query)
+            data = cursor.fetchall()
+            if(len(data) == 0):
+                print("Deleted succesefully...")
+            return True    
+
+        except mysql.connector.Error as error:
+            print("Failed to delete data : {}".format(error))
         finally:
             if(connection.is_connected):
                 connection.close()

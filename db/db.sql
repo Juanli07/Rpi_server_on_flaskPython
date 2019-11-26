@@ -4,7 +4,8 @@ USE acdb;
 CREATE TABLE users(
     email VARCHAR(30) PRIMARY KEY,    
     name VARCHAR(30),
-    password VARCHAR(30)
+    password VARCHAR(30),
+    is_admin BOOLEAN
 );
 
 CREATE TABLE ac(
