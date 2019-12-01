@@ -17,7 +17,6 @@ class accesSql:
         self.db = db
 
     def cleanTerminal():
-        time.sleep(5)
         os.system ("clear")
 
     def insertUsers(self, email, name, password):
@@ -213,6 +212,39 @@ class accesSql:
             sql_query = "SELECT * FROM ac;"
             cursor.execute(sql_query)
             data = cursor.fetchall()
+            if(len(data) == 0):
+                print("Deleted succesefully...")
+            return True    
+
+        except mysql.connector.Error as error:
+            print("Failed to delete data : {}".format(error))
+        finally:
+            if(connection.is_connected):
+                connection.close()
+                print("close connection")
+                accesSql.cleanTerminal()
+    
+    def acUpdate(self, id_ac):
+        try:
+            connection = mysql.connector.connect(host=self.host, user=self.user, passwd=self.__passwd, db=self.db)
+            cursor = connection.cursor()
+            data = self.selecAc()
+            for d in data:
+                if(d[2] == 1 and d[0] == id_ac):
+                    sql_query = "UPDATE ac SET  status = 0 WHERE id_ac = '{}';".format(id_ac)
+                    cursor.execute(sql_query)
+                    connection.commit()
+                    sql_query = "SELECT * FROM ac;"
+                    cursor.execute(sql_query)
+                    data = cursor.fetchall()
+                else:
+                    sql_query = "UPDATE ac SET  status = 1 WHERE id_ac = '{}';".format(id_ac)
+                    cursor.execute(sql_query)
+                    connection.commit()
+                    sql_query = "SELECT * FROM ac;"
+                    cursor.execute(sql_query)
+                    data = cursor.fetchall()
+                    
             if(len(data) == 0):
                 print("Deleted succesefully...")
             return True    

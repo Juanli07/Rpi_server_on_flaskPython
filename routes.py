@@ -102,3 +102,13 @@ def delac(id_ac):
         resp = 'failed'
 
     return jsonify(resp)
+
+@app.route('/acup/<id_ac>', methods=['PUT'])
+def acup(id_ac):
+    resp = ""
+    if(sql.acUpdate(id_ac)):
+        resp = 'succesfull'
+    else:
+        resp = 'failed'
+
+    return jsonify(resp)
