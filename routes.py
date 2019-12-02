@@ -7,7 +7,7 @@ from datetime import date
 
 app = Flask(__name__)
 cors = CORS(app, resources = {r"/*": { "origins": "*"}})
-sql = accessToDB.accesSql('localhost', 'root', '', 'acdb')
+sql = accessToDB.accesSql('remotemysql.com', 'PlbAANl77P', 'kNZndZp7rj', 'PlbAANl77P')
 app.config['JWT_SECRET_KEY'] = 'super-secret'
 jwt = JWTManager(app)
 
