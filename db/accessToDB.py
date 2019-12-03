@@ -235,8 +235,6 @@ class accesSql:
             for d in data:
                 time.sleep(5)
                 if(d[2] == 1 and d[0] == id_ac):
-                    print("true")
-                    time.sleep(5)
                     sql_query = "UPDATE ac SET  status = 0 WHERE id_ac = '{}';".format(id_ac)
                     cursor.execute(sql_query)
                     connection.commit()
