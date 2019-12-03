@@ -59,10 +59,17 @@ def is_admin(email):
             rsp = "true"
     return jsonify(rsp)
 
-@app.route('/regforhour', methods = ['GET'])
+@app.route('/regforhour', methods = ['GET', 'POST'])
 def regforday():
-        data = sql.selectRegforhour('2019-11-13')
-        reg = []
+    reg = []
+    if(request.method == 'POST'):
+        post_data = request.get_json()
+        if(sql.insertRegForHour(str(post_data.get('id_ac')), float(post_data.get('temp')), int(post_data.get('state')), int(post_data.get('motion')))):
+            reg.append({"message" : "susccess"})
+        else:
+            reg.append({"message" : "fail"})
+    else:
+        data = sql.selectRegforhour()
         for row in data:
             reg.append({
                 'id_ac' : row[0],
@@ -71,7 +78,7 @@ def regforday():
                 'state' : row[3],
                 'motion' : row[4]
             })
-        return jsonify(reg)
+    return jsonify(reg)
 @app.route('/ac', methods = ['GET', 'POST'])
 def ac():
     reg = []

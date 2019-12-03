@@ -88,16 +88,19 @@ class accesSql:
         try:
 
             connection = mysql.connector.connect(host = self.host, user = self.user, passwd = self.__passwd, db = self.db)
-            mySql_insert_query = """INSERT INTO regforhour VALUES("{}", "{}",  {},"{}", "{}");""".format(id_ac, temp, "null", status, motion)
+            mySql_insert_query = """INSERT INTO regforhour VALUES("{}", "{}", {},"{}", "{}");""".format(id_ac, temp, "NOW()", status, motion)
             cursor = connection.cursor()
             result = cursor.execute(mySql_insert_query)
             connection.commit()
             print("Inserted data")
             cursor.close()
+            return True
 
         except mysql.connector.Error as error:
             print("error, data no inserted")
             print(error)
+            time.sleep(5)
+            return False
 
         finally:
             if(connection.is_connected()):
@@ -164,11 +167,11 @@ class accesSql:
                 print("close connection")
                 accesSql.cleanTerminal()
 
-    def selectRegforhour(self, date):
+    def selectRegforhour(self):
         try:
             connection = mysql.connector.connect(host=self.host, user=self.user, passwd=self.__passwd, db=self.db)
             cursor = connection.cursor()
-            sql_query = "SELECT * FROM regforhour WHERE SUBSTRING(date, 1, 10) = '{}'".format(date)
+            sql_query = "SELECT * FROM regforhour WHERE id_ac = '{}'".format("G81")
             cursor.execute(sql_query)
             data = cursor.fetchall()
             return data
