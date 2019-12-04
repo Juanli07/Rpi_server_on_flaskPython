@@ -7,7 +7,7 @@ from datetime import date
 
 app = Flask(__name__)
 cors = CORS(app, resources = {r"/*": { "origins": "*"}})
-sql = accessToDB.accesSql('remotemysql.com', 'PlbAANl77P', 'kNZndZp7rj', 'PlbAANl77P')
+sql = accessToDB.accesSql('sql10.freemysqlhosting.net', 'sql10314381', '6sqLF2H2Bi', 'sql10314381')
 app.config['JWT_SECRET_KEY'] = 'super-secret'
 jwt = JWTManager(app)
 
@@ -119,3 +119,18 @@ def acup(id_ac):
         resp = 'failed'
 
     return jsonify(resp)
+
+@app.route('/regforhour/<dates>', methods = ['GET'])
+def regforhour(dates):
+    reg = []
+    print(dates)
+    data = sql.selRegforHour(dates)
+    for row in data:
+        reg.append({
+            'id_ac' : row[0],
+            'temp' : row[1],
+            'time' : row[2],
+            'state' : row[3],
+            'motion' : row[4]
+        })
+    return jsonify(reg)
